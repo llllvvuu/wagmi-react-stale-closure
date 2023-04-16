@@ -1,9 +1,9 @@
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { NextPage } from "next";
-import { useAccount, useConnect, useDisconnect } from "wagmi";
+import { useAccount } from "wagmi";
 import useX from "../hooks/useX";
 
 const HomePage: NextPage = ({}) => {
-  const { connect, connectors } = useConnect();
   const doX = useX();
 
   const { isConnected } = useAccount({
@@ -14,11 +14,7 @@ const HomePage: NextPage = ({}) => {
 
   if (isConnected) return <span>connected</span>;
 
-  return (
-    <button onClick={() => connect({ connector: connectors[0] })}>
-      Connect
-    </button>
-  );
+  return <ConnectButton />;
 };
 
 export default HomePage;

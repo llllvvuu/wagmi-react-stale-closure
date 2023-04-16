@@ -1,3 +1,5 @@
+import "@rainbow-me/rainbowkit/styles.css";
+import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import type { AppProps } from "next/app";
 import {
   Chain,
@@ -6,7 +8,6 @@ import {
   mainnet,
   WagmiConfig,
 } from "wagmi";
-import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { publicProvider } from "wagmi/providers/public";
 
 const { chains, provider } = configureChains<Chain>(
@@ -14,16 +15,23 @@ const { chains, provider } = configureChains<Chain>(
   [publicProvider()]
 );
 
+const { connectors } = getDefaultWallets({
+  appName: "My RainbowKit App",
+  chains,
+});
+
 const client = createClient({
   autoConnect: true,
   provider,
-  connectors: [new MetaMaskConnector({ chains })],
+  connectors,
 });
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <WagmiConfig client={client}>
-      <Component {...pageProps} />
+      <RainbowKitProvider chains={chains}>
+        <Component {...pageProps} />
+      </RainbowKitProvider>
     </WagmiConfig>
   );
 }
